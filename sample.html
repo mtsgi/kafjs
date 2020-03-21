@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mtsgi/kitstrap/d/0.4/kitstrap.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mtsgi/kitstrap/d/0.4/kitstrap-font.css">
   <title>kafjs sample</title>
   <script src="./kaf.js"></script>
 </head>
@@ -22,24 +23,14 @@
     <h3>Data binding with form</h3>
 
     <blockquote class="m-0 m-b-l">
-      Your name is 
+      Your name is
       <strong kit:observe="last"></strong>
       <strong kit:observe="first"></strong>
     </blockquote>
 
     <kit-formgroup>
-      <input
-        type="text"
-        class="textbox p kit-width-50"
-        kit:bind="first"
-        placeholder="Last Name"
-      />
-      <input
-        type="text"
-        class="textbox p kit-width-50"
-        kit:bind="last"
-        placeholder="First Name"
-      />
+      <input type="text" class="textbox kit-width-50" kit:bind="first" placeholder="Last Name" />
+      <input type="text" class="textbox kit-width-50" kit:bind="last" placeholder="First Name" />
     </kit-formgroup>
 
     <kit-space class="m-t-l"></kit-space>
@@ -49,6 +40,19 @@
     <kit-button kit-e="hello">Do "Hello"</kit-button>
     <kit-button kit-e="greet">Do "Greet"</kit-button>
 
+    <kit-space class="m-t-l"></kit-space>
+
+    <h3>Style controlling</h3>
+
+    <div class="mystyle">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat.
+      <div class="mybox">
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+        sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </div>
+    </div>
   </main>
   <script>
     Kaf.debugging = true;
@@ -56,15 +60,29 @@
     const kaf = new Kaf({
       elem: '#kaf',
       data: {
-        hello: 2,
         today: (new Date()).toLocaleDateString()
       },
       events: {
         hello() {
+          Kaf.error('Hello');
           alert('Hello');
         },
         greet() {
           this.hello();
+        }
+      },
+      styles: {
+        background: '#f0f0f0',
+
+        '.mystyle': {
+          color: 'skyblue',
+          background: '#303030',
+          padding: '5px',
+
+          '.mybox': {
+            color: 'beige',
+            fontWeight: '700',
+          }
         }
       }
     });

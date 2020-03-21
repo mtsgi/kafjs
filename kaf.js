@@ -7,6 +7,7 @@ class Kaf {
     if(!this._elem) return Kaf.error('NoElementError');
 
     this._factors = this._elem.querySelectorAll(Kaf.attrs.join(', '));
+    this._styles = options.styles || new Object();
 
     this._data = { ...options.data };
     for(const i in this._data) {
@@ -30,8 +31,11 @@ class Kaf {
           el.addEventListener(ea[1] || 'click', () => this._events[ea[0]]());
         });
       }
+      if(el.hasAttribute('kit-html')) {
+        el.innerHTML = Kaf.eval(el.getAttribute('kit-html'));
+      }
       if(el.hasAttribute('kit:observe')) {
-        el.innerHTML = this._data[el.getAttribute('kit:observe')]
+        el.innerHTML = this._data[el.getAttribute('kit:observe')];
       }
       if(el.hasAttribute('kit:bind')) {
         const binding = el.getAttribute('kit:bind');
@@ -50,6 +54,11 @@ class Kaf {
         });
       }
     });
+
+    for(let i in this._styles) {
+      if(typeof this._styles[i] == 'string') this._elem.style[i] = this._styles[i];
+      else if(typeof this._styles[i] == 'object') Kaf.attachStyles(this._elem, i, this._styles[i]);
+    }
   }
 
   qs(...args) {
@@ -59,13 +68,29 @@ class Kaf {
 
   static error(...messages) {
     if(Kaf.debugging) {
-      console.group('KAF Error(s)');
+      console.group('KAF Error(s)', (new Date()).toLocaleString());
       for(const message of messages) {
-        console.warn('%cKAF Error', 'color: white; background: dodgerblue;border-radius: 4px; padding: 0 5px; box-shadow: inset 2px 2px 2px rgba(0, 0, 0, .1), inset -2px -2px 2px rgba(255, 255, 255, .4)', message);
+        console.warn('%cKAF Error', 'color: white; background: dodgerblue;border-radius: 4px; padding: 0 5px', message);
       }
       console.groupEnd();
     }
     return false;
+  }
+
+  static eval(expr) {
+    return Function(`"use strict"; return(${expr})`)();
+  }
+
+  static attachStyles(parent = document, selector, object = {}) {
+    const tlist = parent.querySelectorAll(selector);
+    for(const d in object) {
+      if(typeof object[d] == 'string') {
+        for(const t of tlist) {
+          t.style[d] = object[d];
+        }
+      }
+      else if(typeof object[d] == 'object') Kaf.attachStyles(parent, `${selector} ${d}`, object[d]);
+    }
   }
 }
 
