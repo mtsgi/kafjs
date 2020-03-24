@@ -53,6 +53,17 @@
         sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
+
+    <kit-space class="m-t-l"></kit-space>
+
+    <h3>Iterated rendering</h3>
+
+    <template kit:for="items">
+      <div>
+          <label class="kit-left">{{ key }}</label>
+          <code>{{ value }}</code>
+      </div>
+  </template>
   </main>
   <script>
     Kaf.debugging = true;
@@ -60,7 +71,13 @@
     const kaf = new Kaf({
       elem: '#kaf',
       data: {
-        today: (new Date()).toLocaleDateString()
+        today: (new Date()).toLocaleDateString(),
+        items: {
+          Andy: 765,
+          Bob: 961,
+          Cyan: 346,
+          David: 315
+        }
       },
       events: {
         hello() {

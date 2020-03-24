@@ -15,6 +15,7 @@ class Kaf {
         get: () => this._data[i],
         set: value => {
           this._data[i] = value;
+          this.induce(i);
         }
       });
     }
@@ -24,7 +25,9 @@ class Kaf {
       this[i] = this._events[i];
     }
 
+    this._nodenum = 0;
     this._factors.forEach(el => {
+      this._nodenum++;
       if(el.hasAttribute('kit-e')) {
         el.getAttribute('kit-e').split(',').forEach(ev => {
           let ea = ev.trim().split(' ');
@@ -43,15 +46,22 @@ class Kaf {
           get: () => this._data[binding],
           set: value => {
             this._data[binding] = value;
-            this._factors.forEach(el => {
-              if(el.getAttribute('kit:observe') === binding) el.innerHTML = value;
-            });
+            this.induce(binding);
           }
         });
         this[binding] = el.value;
         ['keydown', 'keyup', 'keypress', 'change'].forEach(et => {
           el.addEventListener(et, () => this[binding] = el.value);
         });
+      }
+      if(el.hasAttribute("kit:for")) {
+        if('content' in document.createElement('template')) {
+          el.setAttribute('kaf-node-id', this._nodenum);
+          this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML;
+          el.insertAdjacentHTML('afterend', `<kit-for kaf-node-id="${this._nodenum}"></kit-for>`);
+        }
+        else el.style.display = 'none';
+        this.induce(el.getAttribute("kit:for"));
       }
     });
 
@@ -64,6 +74,22 @@ class Kaf {
   qs(...args) {
     let selector = args.join(', ');
     return selector ? this._elem.querySelectorAll(selector) : document.querySelectorAll(this._elem_selector);
+  }
+
+  induce(key) {
+    const _value = this._data[key];
+    for(const elem of this.qs(`[kit\\:observe=${key}]`)) {
+      elem.innerHTML = _value;
+    }
+    if(typeof _value == 'object') {
+      for(let elem of this.qs(`template[kit\\:for=${key}] + kit-for`)) {
+        let _rep = this._data[`__kaf_node_id_${elem.getAttribute('kaf-node-id')}`], _result = '';
+        for(let i in _value) {
+          _result += _rep.replace(/{{\s*key\s*}}/g, i).replace(/{{\s*value\s*}}/g, _value[i]);
+        }
+        elem.innerHTML = _result;
+      }
+    }
   }
 
   static error(...messages) {
@@ -82,14 +108,22 @@ class Kaf {
   }
 
   static attachStyles(parent = document, selector, object = {}) {
-    const tlist = parent.querySelectorAll(selector);
-    for(const d in object) {
-      if(typeof object[d] == 'string') {
-        for(const t of tlist) {
-          t.style[d] = object[d];
+    try {
+      const tlist = parent.querySelectorAll(selector);
+      for(const d in object) {
+        if(typeof object[d] == 'string') {
+          for(const t of tlist) {
+            t.style[d] = object[d];
+          }
+        }
+        else if(typeof object[d] == 'object') {
+          let _j = [selector, d].join(' ');
+          if(d.indexOf('&') === 0) _j = [selector, d.substr(1)].join('');
+          Kaf.attachStyles(parent, _j, object[d]);
         }
       }
-      else if(typeof object[d] == 'object') Kaf.attachStyles(parent, `${selector} ${d}`, object[d]);
+    } catch (error) {
+      Kaf.error(`Invalid selector: ${selector}`);
     }
   }
 }
