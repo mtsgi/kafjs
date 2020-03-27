@@ -10,3 +10,5 @@ kaf.js is a javascript framework to build the application on websites.
 - Data binding with form
 - JS-evaluated rendering
 - Style controlling by JSON
+
+[Sample](./sample.html)

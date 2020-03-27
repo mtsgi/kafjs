@@ -4,19 +4,27 @@ class Kaf {
   constructor(options) {
     this._elem_selector = options.elem;
     this._elem = document.querySelector(options.elem);
-    if(!this._elem) return Kaf.error('NoElementError');
+    if(!this._elem) return Kaf.error('[kaf] Element was not found.');
 
     this._factors = this._elem.querySelectorAll(Kaf.attrs.join(', '));
     this._styles = options.styles || new Object();
 
-    this._data = { ...options.data };
+    this._data = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] !== 'function')) };
     for(const i in this._data) {
       Object.defineProperty(this, i, {
         get: () => this._data[i],
         set: value => {
           this._data[i] = value;
-          this.induce(i);
+          this.$induce(i);
         }
+      });
+    }
+
+    this._calc = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] === 'function')) };
+    for(const i in this._calc) {
+      Object.defineProperty(this, i, {
+        get: () => this._calc[i].call(),
+        set: value => Kaf.error(`[kaf] You can\'t redefine calc-data: ${i}`)
       });
     }
 
@@ -42,17 +50,27 @@ class Kaf {
       }
       if(el.hasAttribute('kit:bind')) {
         const binding = el.getAttribute('kit:bind');
+        if(this[binding]) return Kaf.error('[kit:bind] You can\'t assign the property which has already been defined.');
         Object.defineProperty(this, binding, {
           get: () => this._data[binding],
           set: value => {
             this._data[binding] = value;
-            this.induce(binding);
+            this.$induce(binding);
           }
         });
-        this[binding] = el.value;
-        ['keydown', 'keyup', 'keypress', 'change'].forEach(et => {
-          el.addEventListener(et, () => this[binding] = el.value);
-        });
+        if(el.type == 'checkbox') {
+          this[binding] = el.checked;
+          el.addEventListener('change', () => this[binding] = el.checked);
+        }
+        else {
+          this[binding] = el.value;
+          ['keydown', 'keyup', 'keypress', 'change'].forEach(et => {
+            el.addEventListener(et, () => this[binding] = el.value);
+          });
+        }
+      }
+      if(el.hasAttribute("kit:if")) {
+        el.setAttribute('kaf-node-id', this._nodenum);
       }
       if(el.hasAttribute("kit:for")) {
         if('content' in document.createElement('template')) {
@@ -61,7 +79,7 @@ class Kaf {
           el.insertAdjacentHTML('afterend', `<kit-for kaf-node-id="${this._nodenum}"></kit-for>`);
         }
         else el.style.display = 'none';
-        this.induce(el.getAttribute("kit:for"));
+        this.$induce(el.getAttribute("kit:for"));
       }
     });
 
@@ -71,18 +89,25 @@ class Kaf {
     }
   }
 
-  qs(...args) {
+  $qs(...args) {
     let selector = args.join(', ');
     return selector ? this._elem.querySelectorAll(selector) : document.querySelectorAll(this._elem_selector);
   }
 
-  induce(key) {
+  $induce(key) {
     const _value = this._data[key];
-    for(const elem of this.qs(`[kit\\:observe=${key}]`)) {
+    for(const elem of this.$qs(`[kit\\:observe=${key}]`)) {
       elem.innerHTML = _value;
     }
+    for(const elem of this.$qs(`[kit\\:value=${key}]`)) {
+      elem.value = _value;
+    }
+    for(const elem of this.$qs(`[kit\\:if=${key}]`)) {
+      if(_value) elem.style.display = 'block';
+      else elem.style.display = 'none';
+    }
     if(typeof _value == 'object') {
-      for(let elem of this.qs(`template[kit\\:for=${key}] + kit-for`)) {
+      for(let elem of this.$qs(`template[kit\\:for=${key}] + kit-for`)) {
         let _rep = this._data[`__kaf_node_id_${elem.getAttribute('kaf-node-id')}`], _result = '';
         for(let i in _value) {
           _result += _rep.replace(/{{\s*key\s*}}/g, i).replace(/{{\s*value\s*}}/g, _value[i]);
@@ -122,8 +147,8 @@ class Kaf {
           Kaf.attachStyles(parent, _j, object[d]);
         }
       }
-    } catch (error) {
-      Kaf.error(`Invalid selector: ${selector}`);
+    } catch(error) {
+      Kaf.error(`[styles] Invalid selector: ${selector}`);
     }
   }
 }
