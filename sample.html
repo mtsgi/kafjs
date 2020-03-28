@@ -8,19 +8,18 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mtsgi/kitstrap/d/0.5/kitstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mtsgi/kitstrap/d/0.5/kitstrap-font.css">
   <title>kafjs sample</title>
-  <script src="./kaf.js"></script>
 </head>
 
 <body>
   <main id="kaf">
     <div class="kit-pane p-l p-b-xl kit-bgclr-limegreen">
-      <h3>Data binding</h3>
+      <h3 kit-i>{{ h.observe }}</h3>
 
       <div class="kit-notice -black m-0" kit:observe="today"></div>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-crimson">
-      <h3>Data binding with form</h3>
+      <h3 kit-i>{{ h.bind }}</h3>
 
       <blockquote class="m-0 m-b-l">
         Your name is
@@ -32,16 +31,13 @@
         <input type="text" class="textbox -flat kit-width-50" kit:bind="first" placeholder="Last Name" />
         <input type="text" class="textbox -flat kit-width-50" kit:bind="last" placeholder="First Name" />
       </kit-formgroup>
-
-      <kit-formgroup class="m-t-l">
-        <input type="text" class="textbox kit-width-100" kit:value="dispname" disabled />
-      </kit-formgroup>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-green">
-      <h3>Display toggling</h3>
-      
-      <label class="kit-toggle">Show(<span kit:observe="show"></span>)
+      <h3 kit-i>{{ h.if }}</h3>
+
+      <label class="kit-toggle kit-line-l">
+        Show(<span kit:observe="show"></span>)
         <input type="checkbox" id="show" kit:bind="show">
         <label for="show"></label>
       </label>
@@ -50,22 +46,24 @@
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-dodgerblue">
-      <h3>Calc value</h3>
+      <h3 kit-i>{{ h.locale }}</h3>
 
-      <input type="number" class="textbox -flat" kit:bind="radius" placeholder="Radius" />
+      <a class="kit-button-alt -silver" kit:assign="__locale 'en'">English</a>
+      <a class="kit-button-alt -silver" kit:assign="__locale 'ja'">日本語</a>
+      <a class="kit-button-alt -silver" kit:assign="__locale 'cn'">中文</a>
 
-      <div class="kit-notice -black m-0 m-t-l" kit:observe="area"></div>
+      <div class="kit-notice -black m-0 m-t-l" kit:observe="__locale"></div>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-orange">
-      <h3>Events binding</h3>
+      <h3 kit-i>{{ h.e }}</h3>
 
       <kit-button kit-e="hello">Do "Hello"</kit-button>
       <kit-button kit-e="greet">Do "Greet"</kit-button>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-deeppink">
-      <h3>Style controlling</h3>
+      <h3 kit-i>{{ h.style }}</h3>
 
       <div class="mystyle">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
@@ -80,7 +78,7 @@
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-green">
-      <h3>Iterated rendering</h3>
+      <h3 kit-i>{{ h.for }}</h3>
 
       <template kit:for="items">
         <div>
@@ -90,10 +88,13 @@
       </template>
     </div>
   </main>
-  <script>
+  <script type="module">
+    import Kaf from "./kaf.js";
+
     Kaf.debugging = true;
 
     const kaf = new Kaf({
+      locale: 'en',
       elem: '#kaf',
       data: {
         today: (new Date()).toLocaleDateString(),
@@ -102,6 +103,9 @@
           Bob: 961,
           Cyan: 346,
           David: 315
+        },
+        area() {
+          return Number(this.radius) ** 2 * 3.14;
         }
       },
       events: {
@@ -127,6 +131,41 @@
           '.mybox': {
             color: 'beige',
             fontWeight: '700',
+          }
+        }
+      },
+      dictionary: {
+        en: {
+          h: {
+            observe: 'Data binding',
+            bind: 'Data binding with form',
+            if: 'Conditional rendering',
+            locale: 'I18n',
+            e: 'Events binding',
+            style: 'Style controlling',
+            for: 'Iterated rendering'
+          }
+        },
+        ja: {
+          h: {
+            observe: 'データ束縛',
+            bind: 'フォームによるデータ束縛',
+            if: '条件付きレンダリング',
+            locale: 'I18n(国際化)',
+            e: 'イベント束縛',
+            style: 'スタイル制御',
+            for: '反復レンダリング'
+          }
+        },
+        cn: {
+          h: {
+            observe: '数据绑定',
+            bind: '使用表单进行数据绑定',
+            if: '条件与渲染',
+            locale: 'I18n(国际化)',
+            e: '事件绑定',
+            style: '控制样式表',
+            for: '迭代渲染'
           }
         }
       }
