@@ -1,6 +1,6 @@
 "use strict";
 
-class Kaf {
+export default class Kaf {
   constructor(options) {
     this._elem_selector = options.elem;
     this._elem = document.querySelector(options.elem);
@@ -9,7 +9,10 @@ class Kaf {
     this._factors = this._elem.querySelectorAll(Kaf.attrs.join(', '));
     this._styles = options.styles || new Object();
 
+    this._dictionary = options.dictionary || { default: null };
+
     this._data = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] !== 'function')) };
+    this._data.__locale = options.locale || 'default';
     for(const i in this._data) {
       Object.defineProperty(this, i, {
         get: () => this._data[i],
@@ -23,7 +26,7 @@ class Kaf {
     this._calc = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] === 'function')) };
     for(const i in this._calc) {
       Object.defineProperty(this, i, {
-        get: () => this._calc[i].call(),
+        get: () => this._calc[i].call(this),
         set: value => Kaf.error(`[kaf] You can\'t redefine calc-data: ${i}`)
       });
     }
@@ -40,6 +43,12 @@ class Kaf {
         el.getAttribute('kit-e').split(',').forEach(ev => {
           let ea = ev.trim().split(' ');
           el.addEventListener(ea[1] || 'click', () => this._events[ea[0]]());
+        });
+      }
+      if(el.hasAttribute('kit:assign')) {
+        el.getAttribute('kit:assign').split(',').forEach(ae => {
+          let at = ae.trim().split(' ');
+          el.addEventListener('click', () => this[at[0]] = Kaf.eval(at[1]));
         });
       }
       if(el.hasAttribute('kit-html')) {
@@ -81,7 +90,13 @@ class Kaf {
         else el.style.display = 'none';
         this.$induce(el.getAttribute("kit:for"));
       }
+      if(el.hasAttribute("kit-i")) {
+        el.setAttribute('kaf-node-id', this._nodenum);
+        this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML;
+        //this.$induce(el.getAttribute("kit:for"));
+      }
     });
+    this.$locale(this._data.__locale);
 
     for(let i in this._styles) {
       if(typeof this._styles[i] == 'string') this._elem.style[i] = this._styles[i];
@@ -115,6 +130,23 @@ class Kaf {
         elem.innerHTML = _result;
       }
     }
+    if(key == '__locale') this.$locale(_value);
+  }
+
+  $locale(lang) {
+    for(const el of this._elem.querySelectorAll('[kit-i]')) {
+      this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`]
+      el.innerHTML = this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`].replace(/{{\s*([^\s]*)\s*}}/g, (match, target) => {
+        return Kaf.accessor(this._dictionary[this._data.__locale] || new Object(), target);
+      });
+    }
+  }
+
+  static accessor(obj, acc) {
+    const accessors = acc.split('.');
+    if(!obj) return Kaf.error('Could not find accessing object.') || undefined;
+    else if(accessors[1]) return Kaf.accessor(obj[accessors[0]], accessors.slice(1).join('.'));
+    else return obj[accessors[0]];
   }
 
   static error(...messages) {
@@ -171,5 +203,7 @@ Kaf.attrs = [
   "[kit-color]",
   "[kit\\:if]",
   "[kit-if]",
-  "[kit\\:for]"
+  "[kit\\:for]",
+  "[kit\\:assign]",
+  "[kit-i]"
 ]
