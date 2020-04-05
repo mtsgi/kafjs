@@ -23,12 +23,17 @@ export default class Kaf {
       });
     }
 
-    this._calc = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] === 'function')) };
-    for(const i in this._calc) {
-      Object.defineProperty(this, i, {
-        get: () => this._calc[i].call(this),
-        set: value => Kaf.error(`[kaf] You can\'t redefine calc-data: ${i}`)
-      });
+    this._data.__calc = options.calc || new Object();
+    this._calc = new Object();
+    for(const i in this._data.__calc) {
+      if(typeof this._data.__calc[i] == 'object') {
+        for(const c in this._data.__calc[i]) {
+          Object.defineProperty(this._calc, c, {
+            get: () => this._data.__calc[i][c].apply(this),
+            set: () => Kaf.error('You can\'t assign a value to calc data.')
+          });
+        }
+      }
     }
 
     this._events = { ...options.events };
@@ -93,12 +98,11 @@ export default class Kaf {
       if(el.hasAttribute("kit-i")) {
         el.setAttribute('kaf-node-id', this._nodenum);
         this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML;
-        //this.$induce(el.getAttribute("kit:for"));
       }
     });
     this.$locale(this._data.__locale);
 
-    for(let i in this._styles) {
+    for(const i in this._styles) {
       if(typeof this._styles[i] == 'string') this._elem.style[i] = this._styles[i];
       else if(typeof this._styles[i] == 'object') Kaf.attachStyles(this._elem, i, this._styles[i]);
     }
@@ -122,15 +126,24 @@ export default class Kaf {
       else elem.style.display = 'none';
     }
     if(typeof _value == 'object') {
-      for(let elem of this.$qs(`template[kit\\:for=${key}] + kit-for`)) {
+      for(const elem of this.$qs(`template[kit\\:for=${key}] + kit-for`)) {
         let _rep = this._data[`__kaf_node_id_${elem.getAttribute('kaf-node-id')}`], _result = '';
-        for(let i in _value) {
+        for(const i in _value) {
           _result += _rep.replace(/{{\s*key\s*}}/g, i).replace(/{{\s*value\s*}}/g, _value[i]);
         }
         elem.innerHTML = _result;
       }
     }
     if(key == '__locale') this.$locale(_value);
+    for(const calc in this._data.__calc[key]) {
+      const calculated = this._calc[calc];
+      for(const elem of this.$qs(`[kit\\:\\:observe=${calc}]`)) {
+        elem.innerHTML = calculated;
+      }
+      for(const elem of this.$qs(`[kit\\:\\:value=${calc}]`)) {
+        elem.value = calculated;
+      }
+    }
   }
 
   $locale(lang) {
@@ -190,20 +203,13 @@ Kaf.debugging = false;
 Kaf.attrs = [
   "[kit-ref]",
   "[kit-e]",
-  "[kit-src]",
-  "[kit-alert]",
-  "[kit-launch]",
-  "[kit-close]",
-  "[kit-text]",
-  "[kit-html]",
   "[kit\\:bind]",
   "[kit\\:observe]",
   "[kit\\:value]",
-  "[kit-value]",
-  "[kit-color]",
   "[kit\\:if]",
   "[kit-if]",
   "[kit\\:for]",
   "[kit\\:assign]",
-  "[kit-i]"
+  "[kit-i]",
+  "[kit\\:\\:observe]"
 ]

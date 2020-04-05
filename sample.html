@@ -92,6 +92,16 @@
         </div>
       </template>
     </div>
+
+    <div class="kit-pane p-l p-b-xl kit-bgclr-black">
+      <h3 kit-i>{{ h.calc }}</h3>
+
+      <blockquote class="m-0 m-b-l">
+        Area is <strong kit::observe="area"></strong>
+      </blockquote>
+
+      <input type="text" class="textbox -flat kit-width-100" kit:bind="radius" placeholder="Radius" />
+    </div>
   </main>
   <script type="module">
     import Kaf from "./kaf.js";
@@ -108,9 +118,13 @@
           Bob: 961,
           Cyan: 346,
           David: 315
-        },
-        area() {
-          return Number(this.radius) ** 2 * 3.14;
+        }
+      },
+      calc: {
+        radius: {
+          area() {
+            return Number(this.radius) ** 2 * Math.PI;
+          }
         }
       },
       events: {
@@ -148,7 +162,8 @@
             locale: 'I18n',
             e: 'Events binding',
             style: 'Style controlling',
-            for: 'Iterated rendering'
+            for: 'Iterated rendering',
+            calc: 'Calculated value'
           }
         },
         ja: {
@@ -159,7 +174,8 @@
             locale: 'I18n(国際化)',
             e: 'イベント束縛',
             style: 'スタイル制御',
-            for: '反復レンダリング'
+            for: '反復レンダリング',
+            calc: '計算された値'
           }
         },
         cn: {
@@ -170,7 +186,8 @@
             locale: 'I18n(国际化)',
             e: '事件绑定',
             style: '控制样式表',
-            for: '迭代渲染'
+            for: '迭代渲染',
+            calc: '計算された値'
           }
         }
       }
