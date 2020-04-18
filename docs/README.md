@@ -27,3 +27,7 @@ kaf.jsの利用方法の大まかな流れは、`kaf.js`ファイルから**Kaf�
 > `<script>`タグとして同一のHTMLファイル内からkafを初期化する場合、JavaScriptモジュールである必要があります。JavaScriptモジュールの詳細については[こちら](https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Modules)をご参照ください。
 
 `elem`には、kaf.jsを初期化する対象となる要素の**セレクターを指定**します。上の例では、idが`"kaf"`の`<main>`要素に対してkaf.jsを初期化しています。kaf.jsインスタンスは、**この要素内だけで**機能をはたらかせることに注意してください。
+
+---
+
+[＞ 次に、kaf.jsの実際の機能や使い方を紹介します。](/guide)
