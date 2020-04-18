@@ -11,7 +11,8 @@ export default class Kaf {
 
     this._dictionary = options.dictionary || { default: null };
 
-    this._data = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] !== 'function')) };
+    this._data = new Object();
+    if(options.data) this._data = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] !== 'function')) };
     this._data.__locale = options.locale || 'default';
     for(const i in this._data) {
       Object.defineProperty(this, i, {
@@ -106,6 +107,7 @@ export default class Kaf {
       if(typeof this._styles[i] == 'string') this._elem.style[i] = this._styles[i];
       else if(typeof this._styles[i] == 'object') Kaf.attachStyles(this._elem, i, this._styles[i]);
     }
+    if(this._events['$loaded']) this._events.$loaded();
   }
 
   $qs(...args) {
