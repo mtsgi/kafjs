@@ -48,7 +48,7 @@ export default class Kaf {
       if(el.hasAttribute('kit-e')) {
         el.getAttribute('kit-e').split(',').forEach(ev => {
           let ea = ev.trim().split(' ');
-          el.addEventListener(ea[1] || 'click', () => this._events[ea[0]]());
+          el.addEventListener(ea[1] || 'click', () => this._events[ea[0]].apply(this));
         });
       }
       if(el.hasAttribute('kit:assign')) {
