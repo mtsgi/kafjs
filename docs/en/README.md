@@ -2,7 +2,7 @@
 
 kaf.js is a javascript framework to build the application on websites.
 
-<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/17/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
+<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/19/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 
 As shown in the example above, kaf.js is a highly functional and lightweight JavaScript application framework with **data binding** using form elements, **powerful i18n features** that can be used by simply defining a dictionary, and a very convenient and easy **event binding system**.
 
@@ -27,3 +27,7 @@ And you need to pass **kaf option** as an argument to `new Kaf()`. The options h
 > If you want to initialize kaf from within the same HTML file as `<script>` tag, it must be a JavaScript module. For more information on the JavaScript module, please see [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
 The `elem` is used to specify the **selector** of the element to initialize kaf.js. In the above example, the script initializes kaf.js for a `<main>` element with id `"kaf"`. Please note that the kaf.js instance performs its function **only inside this element**.
+
+---
+
+[＞ Next, let's take a look at how kaf.js actually works and how to use it.](/en/guide)

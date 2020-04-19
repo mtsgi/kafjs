@@ -2,7 +2,7 @@
 
 kaf.jsは、webサイト上でアプリケーションを構築するJavaScriptフレームワークです。
 
-<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/17/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
+<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/19/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 
 上の作例のように、kaf.jsはフォーム要素等を利用した**データのバインディング**や、辞書を定義するだけで利用できる強力な**i18nのための機能**、非常に便利でかんたんな**イベントバインディングシステム**などを持った高機能かつ軽量なJavaScriptアプリケーションフレームワークです。
 
@@ -27,3 +27,7 @@ kaf.jsの利用方法の大まかな流れは、`kaf.js`ファイルから**Kaf�
 > `<script>`タグとして同一のHTMLファイル内からkafを初期化する場合、JavaScriptモジュールである必要があります。JavaScriptモジュールの詳細については[こちら](https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Modules)をご参照ください。
 
 `elem`には、kaf.jsを初期化する対象となる要素の**セレクターを指定**します。上の例では、idが`"kaf"`の`<main>`要素に対してkaf.jsを初期化しています。kaf.jsインスタンスは、**この要素内だけで**機能をはたらかせることに注意してください。
+
+---
+
+[＞ 次に、kaf.jsの実際の機能や使い方を紹介します。](/guide)
