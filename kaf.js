@@ -107,7 +107,7 @@ export default class Kaf {
       if(typeof this._styles[i] == 'string') this._elem.style[i] = this._styles[i];
       else if(typeof this._styles[i] == 'object') Kaf.attachStyles(this._elem, i, this._styles[i]);
     }
-    if(this._events['$loaded']) this._events.$loaded();
+    if(this._events['$loaded']) this._events.$loaded.apply(this);
   }
 
   $qs(...args) {

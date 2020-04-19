@@ -24,7 +24,7 @@ kafデータのときと同じように、インスタンスの初期化時に�
 
 ## 省略記法と複数割当
 
-さらに、**click**イベントの場合は、イベント種類を省略することができます。つまり、`kit-e="hello click"`は`kit-e="hello"`と等価です。
+さらに、**click**イベントの場合は、イベント種類を省略することができます。つまり、`kit-e="hello"`は`kit-e="hello click"`と等価です。
 
 また、一つの要素に対して`kit-e="hello click, greet dblclick"`のようにカンマ区切りで複数のイベントをそれぞれのトリガーで割り当てることができます。次の例を見てください。
 
@@ -42,3 +42,6 @@ kafイベントを用いた少し高度な例を示します。`this`による�
 
 <iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/6rav18qd/24/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 
+---
+
+[＞ [第3章] i18n支援機能 について見る](/i18n)
