@@ -1,5 +1,13 @@
 "use strict";
 
+//    __        ___    _
+//   / /_____ _/ _/   (_)__
+//  /  '_/ _ `/ _/   / (_-<
+// /_/\_\\_,_/_/(_)_/ /___/
+//             |___/
+// v0.1 (beta)
+// MIT LICENSE (c) 2020 mtsgi
+
 export default class Kaf {
   constructor(options) {
     this._elem_selector = options.elem;
