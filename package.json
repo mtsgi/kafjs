@@ -1,0 +1,27 @@
+{
+  "name": "kafjs",
+  "version": "0.1.0",
+  "description": "kaf.js is a javascript framework to build the application on websites",
+  "main": "kaf.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtsgi/kafjs.git"
+  },
+  "keywords": [
+    "framework",
+    "kit",
+    "kaf"
+  ],
+  "author": "mtsgi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mtsgi/kafjs/issues"
+  },
+  "homepage": "https://kafjs.netlify.app/"
+}
