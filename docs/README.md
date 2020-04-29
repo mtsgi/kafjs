@@ -7,6 +7,7 @@ kaf.jsは、webサイト上でアプリケーションを構築するJavaScript�
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mtsgi/kafjs)
 
 - **[View on GitHub](https://github.com/mtsgi/kafjs)**
+- **[完全なAPIドキュメントを読む](/api)**
 
 <iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/22/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 

@@ -23,8 +23,20 @@
       loadSidebar: true,
       hideSidebar: false,
       logo: './logo.png',
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: {
+        '/en/': 'Type to search',
+        '/': 'ドキュメント内を検索する'
+      },
+        noData: 'No Results!',
+        depth: 2,
+        hideOtherSidebarContent: true
+     }
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
 </body>
 </html>

@@ -216,7 +216,7 @@ export default class Kaf {
 Kaf.debugging = false;
 
 Kaf.attrs = [
-  "[kit-ref]",
+  // "[kit-ref]",
   "[kit-e]",
   "[kit\\:bind]",
   "[kit\\:observe]",

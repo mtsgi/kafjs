@@ -8,7 +8,9 @@ kaf.js is a javascript framework to build the application on websites.
 
 ![kaf.js](./logo_with_icon.png)
 
-- [GitHub repository](https://github.com/mtsgi/kafjs)
+- #### [View on GitHub](https://github.com/mtsgi/kafjs)
+
+- #### [View API Documentation](https://kafjs.netlify.app/#/api)
 
 ## Features
 
