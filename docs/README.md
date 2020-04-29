@@ -2,7 +2,13 @@
 
 kaf.jsは、webサイト上でアプリケーションを構築するJavaScriptフレームワークです。
 
-<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/19/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mtsgi/kafjs)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mtsgi/kafjs?color=green)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mtsgi/kafjs)
+
+- **[View on GitHub](https://github.com/mtsgi/kafjs)**
+
+<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/22/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 
 上の作例のように、kaf.jsはフォーム要素等を利用した**データのバインディング**や、辞書を定義するだけで利用できる強力な**i18nのための機能**、非常に便利でかんたんな**イベントバインディングシステム**などを持った高機能かつ軽量なJavaScriptアプリケーションフレームワークです。
 
