@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mtsgi/kitstrap/d/0.5/kitstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mtsgi/kitstrap/d/0.5/kitstrap-font.css">
-  <title>kafjs sample</title>
+  <title>kaf.js sample</title>
 </head>
 
 <body>
@@ -31,6 +31,17 @@
         <input type="text" class="textbox -flat kit-width-50" kit:bind="first" placeholder="Last Name" />
         <input type="text" class="textbox -flat kit-width-50" kit:bind="last" placeholder="First Name" />
       </kit-formgroup>
+    </div>
+
+    <div class="kit-pane p-l p-b-xl kit-bgclr-black">
+      <h3 kit-i>{{ h.tab }}</h3>
+
+      <a kit:assign="tab 'a'" class="kit-button -flat">Tab A</a>
+      <a kit:assign="tab 'b'" class="kit-button -flat">Tab B</a>
+      <a kit:assign="tab 'c'" class="kit-button -flat">Tab C</a>
+      <pre kit:if="tab == 'a'">Content of section A.</pre>
+      <pre kit:if="tab == 'b'">This is a content of B.</pre>
+      <pre kit:if="tab == 'c'">This is C's content.</pre>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-green">
@@ -118,7 +129,8 @@
           Bob: 961,
           Cyan: 346,
           David: 315
-        }
+        },
+        tab: 'a'
       },
       calc: {
         radius: {
@@ -137,11 +149,9 @@
       },
       styles: {
         background: '#f0f0f0',
-
         'h3': {
           color: '#ffffff'
         },
-
         '.mystyle': {
           color: 'skyblue',
           background: '#303030',
@@ -158,6 +168,7 @@
           h: {
             observe: 'Data binding',
             bind: 'Data binding with form',
+            tab: 'Tabs',
             if: 'Conditional rendering',
             locale: 'I18n',
             e: 'Events binding',
@@ -170,6 +181,7 @@
           h: {
             observe: 'データ束縛',
             bind: 'フォームによるデータ束縛',
+            tab: 'タブ',
             if: '条件付きレンダリング',
             locale: 'I18n(国際化)',
             e: 'イベント束縛',
@@ -182,6 +194,7 @@
           h: {
             observe: '数据绑定',
             bind: '使用表单进行数据绑定',
+            tab: '选项卡',
             if: '条件与渲染',
             locale: 'I18n(国际化)',
             e: '事件绑定',
