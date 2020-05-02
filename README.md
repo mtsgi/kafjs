@@ -1,8 +1,14 @@
 # kaf.js
 
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mtsgi/kafjs)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mtsgi/kafjs?color=green)
+
 kaf.js is a javascript framework to build the application on websites.
 
 ![kaf.js](./logo_with_icon.png)
+
+- [GitHub repository](https://github.com/mtsgi/kafjs)
 
 ## Features
 
@@ -14,8 +20,27 @@ kaf.jsには、**kafデータ、kafイベント、i18n支援機能、スタイ�
 
 #### [＞ 日本語ドキュメント](https://kafjs.netlify.app/)
 
+## Usage
+
+The simplest kaf.js template is the one below.
+
+```html
+<main id="kaf">Hello, kaf!</main>
+
+<script type="module">
+  import Kaf from "kaf.js";
+  const kaf = new Kaf({
+    elem: '#kaf'
+  });
+</script>
+```
+
+Please refer to [the documentation](https://kafjs.netlify.app/) for more information on usage.
+
 ## LICENSE
 
-MIT
+MIT License (c) mtsgi 2020
+
+---
 
 <iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/19/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>

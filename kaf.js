@@ -12,7 +12,7 @@ export default class Kaf {
   constructor(options) {
     this._elem_selector = options.elem;
     this._elem = document.querySelector(options.elem);
-    if (!this._elem) return Kaf.error('[kaf] Element was not found.');
+    if (!this._elem) return Kaf.error('[Initialize] Element was not found.');
 
     this._factors = this._elem.querySelectorAll(Kaf.attrs.join(', '));
     this._styles = options.styles || new Object();
@@ -39,7 +39,7 @@ export default class Kaf {
         for (const c in this._data.__calc[i]) {
           Object.defineProperty(this._calc, c, {
             get: () => this._data.__calc[i][c].apply(this),
-            set: () => Kaf.error('You can\'t assign a value to calc data.')
+            set: () => Kaf.error('[Initialize] You can\'t assign a value to calc data.')
           });
         }
       }
@@ -47,7 +47,8 @@ export default class Kaf {
 
     this._events = { ...options.events };
     for (const i in this._events) {
-      this[i] = this._events[i];
+      if (this[i]) Kaf.error(`[Initialize] The event name ${i} is already used. It can't be assigned.`);
+      else this[i] = this._events[i];
     }
 
     this._nodenum = 0;
@@ -56,7 +57,10 @@ export default class Kaf {
       if (el.hasAttribute('kit-e')) {
         el.getAttribute('kit-e').split(',').forEach(ev => {
           let ea = ev.trim().split(' ');
-          el.addEventListener(ea[1] || 'click', () => this._events[ea[0]].apply(this));
+          el.addEventListener(ea[1] || 'click', () => {
+            if (!this._events[ea[0]]) Kaf.error(`[Runtime] Event ${ea[0]} was not found.`, el);
+            else this._events[ea[0]].apply(this);
+          });
         });
       }
       if (el.hasAttribute('kit:assign')) {
@@ -73,7 +77,7 @@ export default class Kaf {
       }
       if (el.hasAttribute('kit:bind')) {
         const binding = el.getAttribute('kit:bind');
-        if (this[binding]) return Kaf.error('[kit:bind] You can\'t assign the property which has already been defined.');
+        if (this[binding]) return Kaf.error('[Initialize] You can\'t assign the property which has already been defined.', el);
         Object.defineProperty(this, binding, {
           get: () => this._data[binding],
           set: value => {
@@ -97,7 +101,7 @@ export default class Kaf {
         const _comp = el.getAttribute("kit:if").split('=='),
           _left = Kaf.accessor(this._data, _comp[0].trim());
         if (_comp[1] && _left == Kaf.eval(_comp[1].trim())) el.style.display = 'block';
-        else if(_comp[1]) el.style.display = 'none';
+        else if (_comp[1]) el.style.display = 'none';
         else if (_left) el.style.display = 'block';
         else el.style.display = 'none';
       }
@@ -143,9 +147,9 @@ export default class Kaf {
     }
     for (const elem of this.$qs(`[kit\\:if]`)) {
       const _comp = elem.getAttribute("kit:if").split('==');
-      if(_comp[0].trim() == key || _comp[0].trim().split('.')[0] == key){
+      if (_comp[0].trim() == key || _comp[0].trim().split('.')[0] == key) {
         if (_comp[1] && _value == Kaf.eval(_comp[1].trim())) elem.style.display = 'block';
-        else if(_comp[1]) elem.style.display = 'none';
+        else if (_comp[1]) elem.style.display = 'none';
         else if (_value) elem.style.display = 'block';
         else elem.style.display = 'none';
       }
@@ -173,25 +177,25 @@ export default class Kaf {
 
   $locale(lang) {
     for (const el of this._elem.querySelectorAll('[kit-i]')) {
-      this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`]
-      el.innerHTML = this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`].replace(/{{\s*([^\s]*)\s*}}/g, (match, target) => {
-        return Kaf.accessor(this._dictionary[this._data.__locale] || new Object(), target);
+      if (this._dictionary[this._data.__locale]) el.innerHTML = this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`].replace(/{{\s*([^\s]*)\s*}}/g, (match, target) => {
+        return Kaf.accessor(this._dictionary[this._data.__locale], target) || Kaf.accessor(this._dictionary[this._data.__default_locale], target);
       });
     }
   }
 
   static accessor(obj, acc) {
     const accessors = acc.split('.');
-    if (!obj) return Kaf.error('Could not find accessing object.') || undefined;
+    if (!obj) return Kaf.error('[Accesor] Could not find accessing object.') || undefined;
     else if (accessors[1]) return Kaf.accessor(obj[accessors[0]], accessors.slice(1).join('.'));
     else return obj[accessors[0]];
   }
 
   static error(...messages) {
     if (Kaf.debugging) {
-      console.group('KAF Error(s)', (new Date()).toLocaleString());
+      console.group('KAF Error');
+      console.log('%cKAF Error', 'color: white; background: dodgerblue;border-radius: 4px; padding: 0 5px', (new Date()).toLocaleString());
       for (const message of messages) {
-        console.warn('%cKAF Error', 'color: white; background: dodgerblue;border-radius: 4px; padding: 0 5px', message);
+        console.warn(message);
       }
       console.groupEnd();
     }
@@ -232,7 +236,6 @@ Kaf.attrs = [
   "[kit\\:observe]",
   "[kit\\:value]",
   "[kit\\:if]",
-  "[kit-if]",
   "[kit\\:for]",
   "[kit\\:assign]",
   "[kit-i]",
