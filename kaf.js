@@ -1,4 +1,5 @@
-"use strict";
+/* eslint-disable no-new-func, eqeqeq, no-return-assign, no-new-object */
+'use strict'
 
 //    __        ___    _
 //   / /_____ _/ _/   (_)__
@@ -9,235 +10,234 @@
 // MIT LICENSE (c) 2020 mtsgi
 
 export default class Kaf {
-  constructor(options) {
-    this._elem_selector = options.elem;
-    this._elem = document.querySelector(options.elem);
-    if (!this._elem) return Kaf.error('[Initialize] Element was not found.');
+  constructor (options) {
+    this._elem_selector = options.elem
+    this._elem = document.querySelector(options.elem)
+    if (!this._elem) return Kaf.error('[Initialize] Element was not found.')
 
-    this._factors = this._elem.querySelectorAll(Kaf.attrs.join(', '));
-    this._styles = options.styles || new Object();
+    this._factors = this._elem.querySelectorAll(Kaf.attrs.join(', '))
+    this._styles = options.styles || new Object()
 
-    this._dictionary = options.dictionary || { default: null };
+    this._dictionary = options.dictionary || { default: null }
 
-    this._data = new Object();
-    if (options.data) this._data = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] !== 'function')) };
-    this._data.__locale = options.locale || 'default';
+    this._data = new Object()
+    if (options.data) this._data = { ...Object.fromEntries(Object.entries(options.data).filter(d => typeof d[1] !== 'function')) }
+    this._data.__locale = options.locale || 'default'
     for (const i in this._data) {
       Object.defineProperty(this, i, {
         get: () => this._data[i],
         set: value => {
-          this._data[i] = value;
-          this.$induce(i);
+          this._data[i] = value
+          this.$induce(i)
         }
-      });
+      })
     }
 
-    this._data.__calc = options.calc || new Object();
-    this._calc = new Object();
+    this._data.__calc = options.calc || new Object()
+    this._calc = new Object()
     for (const i in this._data.__calc) {
-      if (typeof this._data.__calc[i] == 'object') {
+      if (typeof this._data.__calc[i] === 'object') {
         for (const c in this._data.__calc[i]) {
           Object.defineProperty(this._calc, c, {
             get: () => this._data.__calc[i][c].apply(this),
             set: () => Kaf.error('[Initialize] You can\'t assign a value to calc data.')
-          });
+          })
         }
       }
     }
 
-    this._events = { ...options.events };
+    this._events = { ...options.events }
     for (const i in this._events) {
-      if (this[i]) Kaf.error(`[Initialize] The event name ${i} is already used. It can't be assigned.`);
-      else this[i] = this._events[i];
+      if (this[i]) Kaf.error(`[Initialize] The event name ${i} is already used. It can't be assigned.`)
+      else this[i] = this._events[i]
     }
 
-    this._nodenum = 0;
+    this._nodenum = 0
     this._factors.forEach(el => {
-      this._nodenum++;
+      this._nodenum++
       if (el.hasAttribute('kit-e')) {
         el.getAttribute('kit-e').split(',').forEach(ev => {
-          let ea = ev.trim().split(' ');
+          const ea = ev.trim().split(' ')
           el.addEventListener(ea[1] || 'click', () => {
-            if (!this._events[ea[0]]) Kaf.error(`[Runtime] Event ${ea[0]} was not found.`, el);
-            else this._events[ea[0]].apply(this);
-          });
-        });
+            if (!this._events[ea[0]]) Kaf.error(`[Runtime] Event ${ea[0]} was not found.`, el)
+            else this._events[ea[0]].apply(this)
+          })
+        })
       }
       if (el.hasAttribute('kit:assign')) {
         el.getAttribute('kit:assign').split(',').forEach(ae => {
-          let at = ae.trim().split(' ');
-          el.addEventListener('click', () => this[at[0]] = Kaf.eval(at[1]));
-        });
+          const at = ae.trim().split(' ')
+          el.addEventListener('click', () => this[at[0]] = Kaf.eval(at[1]))
+        })
       }
       if (el.hasAttribute('kit-html')) {
-        el.innerHTML = Kaf.eval(el.getAttribute('kit-html'));
+        el.innerHTML = Kaf.eval(el.getAttribute('kit-html'))
       }
       if (el.hasAttribute('kit:observe')) {
-        el.innerHTML = this._data[el.getAttribute('kit:observe')];
+        el.innerHTML = this._data[el.getAttribute('kit:observe')]
       }
       if (el.hasAttribute('kit:bind')) {
-        const binding = el.getAttribute('kit:bind');
-        if (this[binding]) return Kaf.error('[Initialize] You can\'t assign the property which has already been defined.', el);
+        const binding = el.getAttribute('kit:bind')
+        if (this[binding]) return Kaf.error('[Initialize] You can\'t assign the property which has already been defined.', el)
         Object.defineProperty(this, binding, {
           get: () => this._data[binding],
           set: value => {
-            this._data[binding] = value;
-            this.$induce(binding);
+            this._data[binding] = value
+            this.$induce(binding)
           }
-        });
+        })
         if (el.type == 'checkbox') {
-          this[binding] = el.checked;
-          el.addEventListener('change', () => this[binding] = el.checked);
-        }
-        else {
+          this[binding] = el.checked
+          el.addEventListener('change', () => this[binding] = el.checked)
+        } else {
           this[binding] = el.value;
           ['keydown', 'keyup', 'keypress', 'change'].forEach(et => {
-            el.addEventListener(et, () => this[binding] = el.value);
-          });
+            el.addEventListener(et, () => this[binding] = el.value)
+          })
         }
       }
-      if (el.hasAttribute("kit:if")) {
-        el.setAttribute('kaf-node-id', this._nodenum);
-        const _comp = el.getAttribute("kit:if").split('=='),
-          _left = Kaf.accessor(this._data, _comp[0].trim());
-        if (_comp[1] && _left == Kaf.eval(_comp[1].trim())) el.style.display = 'block';
-        else if (_comp[1]) el.style.display = 'none';
-        else if (_left) el.style.display = 'block';
-        else el.style.display = 'none';
+      if (el.hasAttribute('kit:if')) {
+        el.setAttribute('kaf-node-id', this._nodenum)
+        const _comp = el.getAttribute('kit:if').split('==')
+        const _left = Kaf.accessor(this._data, _comp[0].trim())
+        if (_comp[1] && _left == Kaf.eval(_comp[1].trim())) el.style.display = 'block'
+        else if (_comp[1]) el.style.display = 'none'
+        else if (_left) el.style.display = 'block'
+        else el.style.display = 'none'
       }
-      if (el.hasAttribute("kit-if")) {
-        const _value = Kaf.eval(el.getAttribute("kit:if"));
-        console.warn(_value);
+      if (el.hasAttribute('kit-if')) {
+        const _value = Kaf.eval(el.getAttribute('kit:if'))
+        console.warn(_value)
       }
-      if (el.hasAttribute("kit:for")) {
+      if (el.hasAttribute('kit:for')) {
         if ('content' in document.createElement('template')) {
-          el.setAttribute('kaf-node-id', this._nodenum);
-          this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML;
-          el.insertAdjacentHTML('afterend', `<kit-for kaf-node-id="${this._nodenum}"></kit-for>`);
-        }
-        else el.style.display = 'none';
-        this.$induce(el.getAttribute("kit:for"));
+          el.setAttribute('kaf-node-id', this._nodenum)
+          this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML
+          el.insertAdjacentHTML('afterend', `<kit-for kaf-node-id="${this._nodenum}"></kit-for>`)
+        } else el.style.display = 'none'
+        this.$induce(el.getAttribute('kit:for'))
       }
-      if (el.hasAttribute("kit-i")) {
-        el.setAttribute('kaf-node-id', this._nodenum);
-        this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML;
+      if (el.hasAttribute('kit-i')) {
+        el.setAttribute('kaf-node-id', this._nodenum)
+        this._data[`__kaf_node_id_${this._nodenum}`] = el.innerHTML
       }
-    });
-    this.$locale(this._data.__locale);
+    })
+    this.$locale(this._data.__locale)
 
     for (const i in this._styles) {
-      if (typeof this._styles[i] == 'string') this._elem.style[i] = this._styles[i];
-      else if (typeof this._styles[i] == 'object') Kaf.attachStyles(this._elem, i, this._styles[i]);
+      if (typeof this._styles[i] === 'string') this._elem.style[i] = this._styles[i]
+      else if (typeof this._styles[i] === 'object') Kaf.attachStyles(this._elem, i, this._styles[i])
     }
-    if (this._events['$loaded']) this._events.$loaded.apply(this);
+    if (this._events.$loaded) this._events.$loaded.apply(this)
   }
 
-  $qs(...args) {
-    let selector = args.join(', ');
-    return selector ? this._elem.querySelectorAll(selector) : document.querySelectorAll(this._elem_selector);
+  $qs (...args) {
+    const selector = args.join(', ')
+    return selector ? this._elem.querySelectorAll(selector) : document.querySelectorAll(this._elem_selector)
   }
 
-  $induce(key) {
-    const _value = this._data[key];
+  $induce (key) {
+    const _value = this._data[key]
     for (const elem of this.$qs(`[kit\\:observe=${key}]`)) {
-      elem.innerHTML = _value;
+      elem.innerHTML = _value
     }
     for (const elem of this.$qs(`[kit\\:value=${key}]`)) {
-      elem.value = _value;
+      elem.value = _value
     }
-    for (const elem of this.$qs(`[kit\\:if]`)) {
-      const _comp = elem.getAttribute("kit:if").split('==');
+    for (const elem of this.$qs('[kit\\:if]')) {
+      const _comp = elem.getAttribute('kit:if').split('==')
       if (_comp[0].trim() == key || _comp[0].trim().split('.')[0] == key) {
-        if (_comp[1] && _value == Kaf.eval(_comp[1].trim())) elem.style.display = 'block';
-        else if (_comp[1]) elem.style.display = 'none';
-        else if (_value) elem.style.display = 'block';
-        else elem.style.display = 'none';
+        if (_comp[1] && _value == Kaf.eval(_comp[1].trim())) elem.style.display = 'block'
+        else if (_comp[1]) elem.style.display = 'none'
+        else if (_value) elem.style.display = 'block'
+        else elem.style.display = 'none'
       }
     }
-    if (typeof _value == 'object') {
+    if (typeof _value === 'object') {
       for (const elem of this.$qs(`template[kit\\:for=${key}] + kit-for`)) {
-        let _rep = this._data[`__kaf_node_id_${elem.getAttribute('kaf-node-id')}`], _result = '';
+        const _rep = this._data[`__kaf_node_id_${elem.getAttribute('kaf-node-id')}`]; let _result = ''
         for (const i in _value) {
-          _result += _rep.replace(/{{\s*key\s*}}/g, i).replace(/{{\s*value\s*}}/g, _value[i]);
+          _result += _rep.replace(/{{\s*key\s*}}/g, i).replace(/{{\s*value\s*}}/g, _value[i])
         }
-        elem.innerHTML = _result;
+        elem.innerHTML = _result
       }
     }
-    if (key == '__locale') this.$locale(_value);
+    if (key == '__locale') this.$locale(_value)
     for (const calc in this._data.__calc[key]) {
-      const calculated = this._calc[calc];
+      const calculated = this._calc[calc]
       for (const elem of this.$qs(`[kit\\:\\:observe=${calc}]`)) {
-        elem.innerHTML = calculated;
+        elem.innerHTML = calculated
       }
       for (const elem of this.$qs(`[kit\\:\\:value=${calc}]`)) {
-        elem.value = calculated;
+        elem.value = calculated
       }
     }
   }
 
-  $locale(lang) {
+  $locale (lang) {
     for (const el of this._elem.querySelectorAll('[kit-i]')) {
-      if (this._dictionary[this._data.__locale]) el.innerHTML = this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`].replace(/{{\s*([^\s]*)\s*}}/g, (match, target) => {
-        return Kaf.accessor(this._dictionary[this._data.__locale], target) || Kaf.accessor(this._dictionary[this._data.__default_locale], target);
-      });
-    }
-  }
-
-  static accessor(obj, acc) {
-    const accessors = acc.split('.');
-    if (!obj) return Kaf.error('[Accesor] Could not find accessing object.') || undefined;
-    else if (accessors[1]) return Kaf.accessor(obj[accessors[0]], accessors.slice(1).join('.'));
-    else return obj[accessors[0]];
-  }
-
-  static error(...messages) {
-    if (Kaf.debugging) {
-      console.group('KAF Error');
-      console.log('%cKAF Error', 'color: white; background: dodgerblue;border-radius: 4px; padding: 0 5px', (new Date()).toLocaleString());
-      for (const message of messages) {
-        console.warn(message);
+      if (this._dictionary[this._data.__locale]) {
+        el.innerHTML = this._data[`__kaf_node_id_${el.getAttribute('kaf-node-id')}`].replace(/{{\s*([^\s]*)\s*}}/g, (match, target) => {
+          return Kaf.accessor(this._dictionary[this._data.__locale], target) || Kaf.accessor(this._dictionary[this._data.__default_locale], target)
+        })
       }
-      console.groupEnd();
     }
-    return false;
   }
 
-  static eval(expr) {
-    return Function(`"use strict"; return(${expr})`)();
+  static accessor (obj, acc) {
+    const accessors = acc.split('.')
+    if (!obj) return Kaf.error('[Accesor] Could not find accessing object.') || undefined
+    else if (accessors[1]) return Kaf.accessor(obj[accessors[0]], accessors.slice(1).join('.'))
+    else return obj[accessors[0]]
   }
 
-  static attachStyles(parent = document, selector, object = {}) {
+  static error (...messages) {
+    if (Kaf.debugging) {
+      console.group('KAF Error')
+      console.log('%cKAF Error', 'color: white; background: dodgerblue;border-radius: 4px; padding: 0 5px', (new Date()).toLocaleString())
+      for (const message of messages) {
+        console.warn(message)
+      }
+      console.groupEnd()
+    }
+    return false
+  }
+
+  static eval (expr) {
+    return Function(`"use strict"; return(${expr})`)()
+  }
+
+  static attachStyles (parent = document, selector, object = {}) {
     try {
-      const tlist = parent.querySelectorAll(selector);
+      const tlist = parent.querySelectorAll(selector)
       for (const d in object) {
-        if (typeof object[d] == 'string') {
+        if (typeof object[d] === 'string') {
           for (const t of tlist) {
-            t.style[d] = object[d];
+            t.style[d] = object[d]
           }
-        }
-        else if (typeof object[d] == 'object') {
-          let _j = [selector, d].join(' ');
-          if (d.indexOf('&') === 0) _j = [selector, d.substr(1)].join('');
-          Kaf.attachStyles(parent, _j, object[d]);
+        } else if (typeof object[d] === 'object') {
+          let _j = [selector, d].join(' ')
+          if (d.indexOf('&') === 0) _j = [selector, d.substr(1)].join('')
+          Kaf.attachStyles(parent, _j, object[d])
         }
       }
     } catch (error) {
-      Kaf.error(`[styles] Invalid selector: ${selector}`);
+      Kaf.error(`[styles] Invalid selector: ${selector}`)
     }
   }
 }
 
-Kaf.debugging = false;
+Kaf.debugging = false
 
 Kaf.attrs = [
-  "[kit-ref]",
-  "[kit-e]",
-  "[kit\\:bind]",
-  "[kit\\:observe]",
-  "[kit\\:value]",
-  "[kit\\:if]",
-  "[kit\\:for]",
-  "[kit\\:assign]",
-  "[kit-i]",
-  "[kit\\:\\:observe]"
+  '[kit-ref]',
+  '[kit-e]',
+  '[kit\\:bind]',
+  '[kit\\:observe]',
+  '[kit\\:value]',
+  '[kit\\:if]',
+  '[kit\\:for]',
+  '[kit\\:assign]',
+  '[kit-i]',
+  '[kit\\:\\:observe]'
 ]
