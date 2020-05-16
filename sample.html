@@ -31,6 +31,17 @@
         <input type="text" class="textbox -flat kit-width-50" kit:bind="first" placeholder="Last Name" />
         <input type="text" class="textbox -flat kit-width-50" kit:bind="last" placeholder="First Name" />
       </kit-formgroup>
+
+      <div class="kit-notice m-0 m-t-l" kit:if="first == last">SAME</div>
+
+      <p>
+        Default Value: 
+        <strong kit:observe="fruit"></strong>
+      </p>
+
+      <kit-formgroup>
+        <input type="text" class="textbox -flat kit-width-100" kit:bind="fruit" placeholder="Fruit" />
+      </kit-formgroup>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-black">
@@ -42,6 +53,7 @@
       <pre kit:if="tab == 'a'">Content of section A.</pre>
       <pre kit:if="tab == 'b'">This is a content of B.</pre>
       <pre kit:if="tab == 'c'">This is C's content.</pre>
+      <pre kit:if="tab != 'c'">It is NOT C!</pre>
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-green">
@@ -79,7 +91,7 @@
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-deeppink">
-      <h3 kit-i>{{ hz.style }}</h3>
+      <h3 kit-i>{{ h.style }}</h3>
 
       <div class="mystyle">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
@@ -130,6 +142,7 @@
           Cyan: 346,
           David: 315
         },
+        fruit: 'ORANGE',
         tab: 'a'
       },
       calc: {

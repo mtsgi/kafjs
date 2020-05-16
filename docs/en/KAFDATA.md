@@ -1,6 +1,6 @@
 # [Chapter 1] KAF Data
 
-**kaf data** is a fundamental feature of kaf.js.
+**kaf data** is a fundamental feature of kaf.js. This feature allows you to build a website that dynamically responds to the content of the data.
 
 ## The Basics of KAF Data
 
@@ -31,6 +31,7 @@ And as the data is updated, the contents of elements with `kit:observe` are also
 In addition, the `kit:bind` attribute can also be used for **checkboxes**. Normally, the value of a checkbox is processed as a specific string when retrieved with JavaScript, but in kaf.js it is converted to a value of `true, false` and stored in kaf data for convenience.
 
 > When using the `kit:bind` attribute to bind data, it is **not necessary to pre-define** the data name in the `data` option of the kaf.
+> Or you can set the initial value by binding to a predefined data name with `kit:bind`.
 
 ## Conditional rendering
 
@@ -41,6 +42,38 @@ Other uses of **kaf data** include **conditional rendering**.
 If the `kit:if` attribute is specified as the name of a kaf data, the element will be displayed only when the kaf data has **a value that evaluates to true**.
 
 In the example above, each checkbox is assigned a KAF data, and its value is used to toggle the display of the element.
+
+In addition, in the `kit:if` attribute, you can use the following operators to control the display of the element in more detail.
+
+In addition, in the `kit:if` attribute, you can use the following operators to control the display of the element in more detail
+
+- **`==` operator**
+  - By passing a **JavaScript expression** or **kaf data name** on the right side, the element will be displayed only if the **kaf data** and the expression (or value of the kaf data) are equivalent.
+  - Example: `<div kit:if="name == 'John'"></div>`
+
+- **`!=` operator**
+  - Passing a **JavaScript expression** or **kaf data name** on the right side will only display that element if the **kaf data** and the expression (or value of the kaf data) are not equivalent.
+  - Example: `<div kit:if="number ! = 0"></div>`
+
+- **`===` operator**
+  - Passing a **JavaScript expression** or **kaf data name** on the right-hand side will only display that element if the **kaf data** and the expression (or value of the kaf data) are **strictly** equivalent.
+  - Example: `<div kit:if="number === 100"></div>` (this element is not displayed if the value is a string `"100"`)
+
+- **`!==` operator**
+  - Passing a **JavaScript expression** or **kaf data name** on the right-hand side will only display that element if the **kaf data** and the expression (or value of the kaf data) are not **strictly** equivalent.
+  - Example: `<div kit:if="password ! == password_confirm"></div>` (this element is not displayed when the values of the two KAF data are strictly equivalent)
+
+- **`??` operator**
+  - Only if the kaf data is not `null` and `undefined` will the element be displayed.
+  - Example: `<p kit:if="mydata.address.pref ??" ></p>`
+
+- **`&&` operator**
+  - Passing a **kaf data name** on the right-hand side will only display that element if the two kaf data are both values **that are truthy**.
+  - Example: `<p kit:if="first_name && last_name"></p>`
+
+- **`||` operator**
+  - Passing a **kaf data name** on the right-hand side will display the element if either of the two kaf data is a value **that are trythy**.
+  - Example: `<p kit:if="mydata.height || mydata.width"></p>`
 
 ## Assigning elements
 

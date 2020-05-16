@@ -78,14 +78,17 @@ export default class Kaf {
       }
       if (el.hasAttribute('kit:bind')) {
         const binding = el.getAttribute('kit:bind')
-        if (this[binding]) return Kaf.error('[Initialize] You can\'t assign the property which has already been defined.', el)
-        Object.defineProperty(this, binding, {
-          get: () => this._data[binding],
-          set: value => {
-            this._data[binding] = value
-            this.$induce(binding)
-          }
-        })
+        if (this[binding]) {
+          el.value = this._data[binding]
+        } else {
+          Object.defineProperty(this, binding, {
+            get: () => this._data[binding],
+            set: value => {
+              this._data[binding] = value
+              this.$induce(binding)
+            }
+          })
+        }
         if (el.type == 'checkbox') {
           this[binding] = el.checked
           el.addEventListener('change', () => this[binding] = el.checked)
@@ -98,12 +101,6 @@ export default class Kaf {
       }
       if (el.hasAttribute('kit:if')) {
         el.setAttribute('kaf-node-id', this._nodenum)
-        const _comp = el.getAttribute('kit:if').split('==')
-        const _left = Kaf.accessor(this._data, _comp[0].trim())
-        if (_comp[1] && _left == Kaf.eval(_comp[1].trim())) el.style.display = 'block'
-        else if (_comp[1]) el.style.display = 'none'
-        else if (_left) el.style.display = 'block'
-        else el.style.display = 'none'
       }
       if (el.hasAttribute('kit-if')) {
         const _value = Kaf.eval(el.getAttribute('kit:if'))
@@ -145,13 +142,7 @@ export default class Kaf {
       elem.value = _value
     }
     for (const elem of this.$qs('[kit\\:if]')) {
-      const _comp = elem.getAttribute('kit:if').split('==')
-      if (_comp[0].trim() == key || _comp[0].trim().split('.')[0] == key) {
-        if (_comp[1] && _value == Kaf.eval(_comp[1].trim())) elem.style.display = 'block'
-        else if (_comp[1]) elem.style.display = 'none'
-        else if (_value) elem.style.display = 'block'
-        else elem.style.display = 'none'
-      }
+      this.$switchIfElem(elem)
     }
     if (typeof _value === 'object') {
       for (const elem of this.$qs(`template[kit\\:for=${key}] + kit-for`)) {
@@ -172,6 +163,49 @@ export default class Kaf {
         elem.value = calculated
       }
     }
+  }
+
+  $switchIfElem (elem) {
+    const compArr = elem.getAttribute('kit:if').split(/(===|!==|==|!=|\?\?|&&|\|\|)/)
+    const target = Kaf.accessor(this._data, compArr[0].trim())
+    let right = null
+    if (compArr[2]) {
+      try {
+        right = Kaf.eval(compArr[2])
+      } catch (error) {
+        right = Kaf.accessor(this._data, compArr[2].trim())
+      }
+    }
+    console.warn(target, right)
+    let shouldDisp = false
+    switch (compArr[1]) {
+      case undefined:
+        if (target) shouldDisp = true
+        break
+      case '==':
+        if (target == right) shouldDisp = true
+        break
+      case '!=':
+        if (target != right) shouldDisp = true
+        break
+      case '===':
+        if (target === right) shouldDisp = true
+        break
+      case '!==':
+        if (target !== right) shouldDisp = true
+        break
+      case '??':
+        if (target !== undefined && target !== null) shouldDisp = true
+        break
+      case '&&':
+        if (target && Kaf.accessor(this._data, compArr[2].trim())) shouldDisp = true
+        break
+      case '||':
+        if (target || Kaf.accessor(this._data, compArr[2].trim())) shouldDisp = true
+        break
+    }
+    if (shouldDisp) elem.style.display = 'block'
+    else elem.style.display = 'none'
   }
 
   $locale (lang) {

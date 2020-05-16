@@ -1,8 +1,8 @@
 # kaf.js
 
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mtsgi/kafjs)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mtsgi/kafjs?color=green)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mtsgi/kafjs?style=for-the-badge&logo=github)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mtsgi/kafjs?color=green&style=for-the-badge&logo=github)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mtsgi/?kafjsstyle=for-the-badge&logo=github)
 
 kaf.js is a javascript framework to build the application on websites.
 
