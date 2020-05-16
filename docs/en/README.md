@@ -2,13 +2,13 @@
 
 kaf.js is a javascript framework to build the application on websites.
 
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mtsgi/kafjs)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mtsgi/kafjs?color=green)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mtsgi/kafjs)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mtsgi/kafjs?style=for-the-badge&logo=github)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mtsgi/kafjs?color=green&style=for-the-badge&logo=github)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mtsgi/?kafjsstyle=for-the-badge&logo=github)
 
 - **[View on GitHub](https://github.com/mtsgi/kafjs)**
 
-<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/22/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
+<iframe width="100%" height="300" src="//jsfiddle.net/mtsgi/b2c9m14v/28/embedded/js,html,result/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 
 As shown in the example above, kaf.js is a highly functional and lightweight JavaScript application framework with **data binding** using form elements, **powerful i18n features** that can be used by simply defining a dictionary, and a very convenient and easy **event binding system**.
 
