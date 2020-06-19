@@ -1,6 +1,6 @@
 {
   "name": "kafjs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "kaf.js is a javascript framework to build the application on websites",
   "main": "kaf.js",
   "directories": {

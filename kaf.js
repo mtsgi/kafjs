@@ -1,4 +1,5 @@
 /* eslint-disable no-new-func, eqeqeq, no-return-assign, no-new-object */
+
 'use strict'
 
 //    __        ___    _
@@ -176,7 +177,6 @@ export default class Kaf {
         right = Kaf.accessor(this._data, compArr[2].trim())
       }
     }
-    console.warn(target, right)
     let shouldDisp = false
     switch (compArr[1]) {
       case undefined:
