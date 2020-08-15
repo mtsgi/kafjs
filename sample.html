@@ -88,6 +88,10 @@
 
       <kit-button kit-e="hello mouseover">Mouseover to "Hello"</kit-button>
       <kit-button kit-e="greet dblclick">Dblclick to "Greet"</kit-button>
+
+      <kit-space></kit-space>
+
+      <input type="text" value="Click me!" class="kit-textbox" kit-e="getContext" />
     </div>
 
     <div class="kit-pane p-l p-b-xl kit-bgclr-deeppink">
@@ -158,6 +162,9 @@
         },
         greet() {
           this.hello();
+        },
+        getContext(e) {
+          alert(`Client X: ${e.clientX}`);
         }
       },
       styles: {
